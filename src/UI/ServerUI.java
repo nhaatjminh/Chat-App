@@ -6,7 +6,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import me.alexpanov.net.FreePortFinder;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -105,7 +104,7 @@ public class ServerUI extends JFrame implements ActionListener {
 		if(e.getSource() == btnStart) {
 			if(btnStart.getText().equals("START")) {
 				exit = false;
-				getRandomPort();
+				SetPort(8000);
 				start();
 				btnStart.setText("STOP");
 			}else {
@@ -141,8 +140,8 @@ public class ServerUI extends JFrame implements ActionListener {
 		System.out.println(formatter.format(new Date()) + " " + message);
 	}
 
-	private static int getRandomPort() {
-		int port = 8000;
+	private static int SetPort(int p) {
+		int port = p;
 		PORT = port;
 		return port;
 	}
@@ -214,6 +213,13 @@ public class ServerUI extends JFrame implements ActionListener {
 					addToLogs(name + " is leaving");
 					connectedClients.remove(name);
 					broadcastMessage(name + " has left");
+					if (!socket.isClosed()) {
+						try {
+							socket.close();
+						} catch (Exception e) {
+							addToLogs(e.getMessage());	
+						}
+					}
 				}
 			}
 		}
