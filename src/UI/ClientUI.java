@@ -39,6 +39,7 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class ClientUI extends JFrame implements ActionListener {	
 
@@ -46,6 +47,7 @@ public class ClientUI extends JFrame implements ActionListener {
 	private static Socket clientSocket;
 	private static int PORT;
 	private PrintWriter out;
+	private static String host = "10.126.5.99";
 
 	private static Connection cnn = null;
 	private static Statement stmt = null;
@@ -80,6 +82,7 @@ public class ClientUI extends JFrame implements ActionListener {
 	private JFrame notiFrame;
 	private JLabel notiMsg;
 	private JButton exitBtn;
+
 
 
 	public GridBagConstraints c = new GridBagConstraints();
@@ -148,6 +151,7 @@ public class ClientUI extends JFrame implements ActionListener {
 
 		Container notiPane = notiFrame.getContentPane();
 		FirstOfAddComponents(notiPane);
+		notiFrame.setBounds(300, 300, 400, 300);
 
 		CreateComponents(1, 0, 30, 20);
 		notiMsg = new JLabel(msg);
@@ -168,7 +172,7 @@ public class ClientUI extends JFrame implements ActionListener {
 		
 		Container pane = frame.getContentPane();
 		FirstOfAddComponents(pane);
-		setBounds(200, 200, 400, 300);
+		frame.setBounds(300, 300, 400, 300);
 
 		CreateComponents(0, 1, 15, 5);
 		lblUsername = new JLabel("Username");
@@ -209,7 +213,7 @@ public class ClientUI extends JFrame implements ActionListener {
 		
 		Container pane = frame.getContentPane();
 		FirstOfAddComponents(pane);
-		setBounds(200, 200, 400, 300);
+		frame.setBounds(300, 300, 400, 300);
 		CreateComponents(0, 2, 15, 5);
 		lblUsername = new JLabel("Username");
 		pane.add(lblUsername, c);
@@ -312,6 +316,22 @@ public class ClientUI extends JFrame implements ActionListener {
 		txtMessage = new JTextField();
 		panelSouth.add(txtMessage);
 		txtMessage.setColumns(50);
+		txtMessage.addKeyListener(new KeyListener(){
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == 10) {
+					btnSend.doClick();
+				}
+			}
+		});
 
 		btnSend = new JButton("SEND");
 		btnSend.addActionListener(this);
@@ -393,7 +413,7 @@ public class ClientUI extends JFrame implements ActionListener {
 		try {
 			//PORT = Integer.parseInt(txtPort.getText().trim());
 			//clientName = txtNickname.getText().trim();
-			clientSocket = new Socket("192.168.1.4", 8000);
+			clientSocket = new Socket(host, 8000);
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
 			new Thread(new Listener()).start();
 			//send name
